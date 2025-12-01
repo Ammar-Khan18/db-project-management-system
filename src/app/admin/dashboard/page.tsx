@@ -6,8 +6,10 @@ import OwnerForm from "./components/OwnerForm";
 import AgentForm from "./components/AgentForm";
 import TenantForm from "./components/TenantForm";
 import PropertyForm from "./components/PropertyForm";
+import LeaseForm from "./components/LeaseForm";
+import PaymentForm from "./components/PaymentForm";
 
-type TableName = "Property_Owners" | "Agents" | "Tenants" | "Properties";
+type TableName = "Property_Owners" | "Agents" | "Tenants" | "Properties" | "Lease_Agreements" | "Payments";
 
 export default function AdminDashboard() {
   const [table, setTable] = useState<TableName>("Property_Owners");
@@ -72,6 +74,12 @@ async function handleDelete(row: any) {
         return <TenantForm tenant={editingRow} onSuccess={handleFormSuccess} onCancel={() => setShowForm(false)} />;
       case "Properties":
         return <PropertyForm property={editingRow} onSuccess={handleFormSuccess} onCancel={() => setShowForm(false)} />;
+      case "Lease_Agreements":
+      return <LeaseForm lease={editingRow} onSuccess={handleFormSuccess} onCancel={() => setShowForm(false)} />;
+    case "Payments":
+      return <PaymentForm payment={editingRow} onSuccess={handleFormSuccess} onCancel={() => setShowForm(false)} />;
+    default:
+      return null;
     }
   }
 
@@ -81,7 +89,7 @@ async function handleDelete(row: any) {
 
       {/* Table selection buttons */}
       <div className="flex gap-4 mb-4 text-black">
-        {["Property_Owners", "Agents", "Tenants", "Properties"].map((t) => (
+        {["Property_Owners", "Agents", "Tenants", "Properties", "Lease_Agreements", "Payments"].map((t) => (
           <button
             key={t}
             className={`px-3 py-1 rounded ${t === table ? "bg-blue-600 text-white" : "bg-gray-200"}`}
