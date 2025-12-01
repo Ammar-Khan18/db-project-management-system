@@ -4,7 +4,8 @@ import { pool } from "../../../../lib/db";
 export async function GET() {
   // Fetch all agents
   const [rows] = await pool.query<any[]>("SELECT * FROM agents");
-  return NextResponse.json({ agents: rows });
+  return NextResponse.json(rows);
+
 }
 
 export async function POST(request: Request) {

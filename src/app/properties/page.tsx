@@ -30,21 +30,24 @@ export default function PropertiesPage() {
   const [showModal, setShowModal] = useState(false);
   const [newProperty, setNewProperty] = useState<Partial<Property>>({});
 
-  const fetchProperties = async () => {
-    try {
-      const res = await fetch("/api/properties");
-      const data = await res.json();
-      setProperties(data || []);
-    } catch (e) {
-      console.error("fetch properties error", e);
-    }
-  };
+const fetchProperties = async () => {
+  try {
+    const res = await fetch("/api/properties");
+    const data = await res.json();
+
+    // FIX:
+    setProperties(Array.isArray(data.properties) ? data.properties : []);
+  } catch (e) {
+    console.error("fetch properties error", e);
+  }
+};
+
 
   const fetchOwners = async () => {
     try {
       const res = await fetch("/api/owners");
       const data = await res.json();
-      setOwners(data || []);
+      setOwners(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error("fetch owners error", e);
     }
@@ -53,7 +56,7 @@ export default function PropertiesPage() {
     try {
       const res = await fetch("/api/agents");
       const data = await res.json();
-      setAgents(data || []);
+      setAgents(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error("fetch agents error", e);
     }

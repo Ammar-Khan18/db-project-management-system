@@ -1,7 +1,11 @@
-import { pool } from "../../../lib/db";
 import AgentsClient from "./AgentsClient";
 
 export default async function AgentsPage() {
-  const [rows] = await pool.query<any[]>("SELECT * FROM agents");
-  return <AgentsClient agents={rows} />;
+  const res = await fetch("http://localhost:3000/api/agents", {
+    cache: "no-store",
+  });
+
+  const agents = await res.json(); // This will be an array
+
+  return <AgentsClient agents={agents} />;
 }
