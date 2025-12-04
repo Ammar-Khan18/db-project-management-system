@@ -9,14 +9,28 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("Guest");
+  const [cnic, setCnic] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
 
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
+
+    const payload: any = { username, email, password, role };
+
+    if (role === "Owner") {
+      payload.cnic = cnic;
+      payload.phone_no = phone;
+      payload.address = address;
+      payload.city = city;
+    }
+
     const res = await fetch("/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, email, password, role }),
+      body: JSON.stringify(payload),
     });
 
     const data = await res.json();
@@ -82,6 +96,44 @@ export default function RegisterPage() {
           <option value="User" className="text-black">User</option>
           <option value="Guest" className="text-black">Guest</option>
         </select>
+
+        {/* Owner-specific fields */}
+        {role === "Owner" && (
+          <>
+            <input
+              type="text"
+              placeholder="CNIC"
+              className="border p-2 rounded"
+              value={cnic}
+              onChange={(e) => setCnic(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Phone Number"
+              className="border p-2 rounded"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Address"
+              className="border p-2 rounded"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="City"
+              className="border p-2 rounded"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              required
+            />
+          </>
+        )}
 
         <button
           type="submit"
