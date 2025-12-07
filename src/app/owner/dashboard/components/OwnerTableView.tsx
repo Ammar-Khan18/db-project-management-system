@@ -1,4 +1,3 @@
-// app/owner/dashboard/components/OwnerTableView.tsx
 "use client";
 
 import React from "react";
@@ -14,7 +13,7 @@ export default function OwnerTableView({ columns, data, onEdit, onDelete }: Prop
   return (
     <div className="overflow-auto border rounded">
       <table className="w-full table-auto">
-        <thead className="bg-gray-100">
+        <thead className="">
           <tr>
             {columns.map((c) => (
               <th key={c} className="text-left p-2 border-b">{c}</th>
@@ -23,12 +22,26 @@ export default function OwnerTableView({ columns, data, onEdit, onDelete }: Prop
           </tr>
         </thead>
         <tbody>
-          {data.map((row) => (
-            <tr key={row.id} className="hover:bg-gray-50">
-              {columns.map((c) => <td key={c} className="p-2 border-b">{String(row[c])}</td>)}
+          {data.map((row, rowIndex) => (
+            <tr key={row.id ?? rowIndex} className="">
+              {columns.map((c) => (
+                <td key={`${row.id ?? rowIndex}-${c}`} className="p-2 border-b">
+                  {String(row[c])}
+                </td>
+              ))}
               <td className="p-2 border-b flex gap-2">
-                <button className="bg-blue-600 text-white px-2 py-1 rounded" onClick={() => onEdit(row)}>Edit</button>
-                <button className="bg-red-600 text-white px-2 py-1 rounded" onClick={() => onDelete(row)}>Delete</button>
+                <button
+                  className="bg-blue-600 text-white px-2 py-1 rounded"
+                  onClick={() => onEdit(row)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="bg-red-600 text-white px-2 py-1 rounded"
+                  onClick={() => onDelete(row)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
@@ -38,9 +51,7 @@ export default function OwnerTableView({ columns, data, onEdit, onDelete }: Prop
   );
 }
 
-/* Small tenant form exported below for page to import easily.
-   This form is owner-scoped (tenant can be assigned to one of owner's properties).
-*/
+/* TenantForm remains the same */
 export function TenantForm({ tenant, ownerId, onSuccess, onCancel }: any) {
   const [form, setForm] = React.useState<any>({
     name: "",
@@ -59,7 +70,6 @@ export function TenantForm({ tenant, ownerId, onSuccess, onCancel }: any) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const method = tenant?.id ? "PUT" : "POST";
-    // API endpoint will ensure tenant is associated correctly if needed
     await fetch("/api/owner/tenants", {
       method,
       headers: { "Content-Type": "application/json" },

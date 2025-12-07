@@ -1,16 +1,39 @@
+// app/api/owner/tenants/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import db from "../../../../../lib/db";
 
 export async function GET(req: NextRequest) {
-  const owner_id = req.headers.get("owner_id");
+  try {
+    const owner_id = req.nextUrl.searchParams.get("owner_id");
 
-  const rows = await db.query(`
-    SELECT Tenants.*
-    FROM Tenants
-    JOIN Lease_Agreements ON Lease_Agreements.tenant_id = Tenants.id
-    JOIN Properties ON Properties.id = Lease_Agreements.property_id
-    WHERE Properties.owner_id=?
-  `, [owner_id]);
+    if (!owner_id) {
+      // Always return JSON, even for missing params
+      return NextResponse.json({
+        success: false,
+        data: [],
+        message: "owner_id query param missing",
+      }, { status: 400 });
+    }
 
-  return NextResponse.json(rows);
+    // Fetch tenants for the owner
+    const [rows] = await db.query("SELECT * FROM tenants WHERE owner_id = ?", [owner_id]);
+
+    // Ensure rows is always an array
+    const tenants = Array.isArray(rows) ? rows : [];
+
+    return NextResponse.json({
+      success: true,
+      data: tenants,
+      message: "Tenants fetched successfully",
+    });
+
+  } catch (err: any) {
+    console.error("Tenants API error:", err);
+
+    return NextResponse.json({
+      success: false,
+      data: [],
+      message: err.message || "Server error",
+    }, { status: 500 });
+  }
 }

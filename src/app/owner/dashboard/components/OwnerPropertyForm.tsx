@@ -11,19 +11,21 @@ interface Props {
 }
 
 export default function OwnerPropertyForm({ property, ownerId, onSuccess, onCancel }: Props) {
-  const [form, setForm] = useState<any>({
-    property_type: "",
-    address: "",
-    city: "",
-    size_sqft: 0,
-    rooms: 0,
-    monthly_rent: 0,
-    security_deposit: 0,
-    description: "",
-    status: "Available",
-    agent_id: null,
-    ...property,
-  });
+const [form, setForm] = useState<any>({
+  owner_id: ownerId,    // ALWAYS include this
+  property_type: "",
+  address: "",
+  city: "",
+  size_sqft: 0,
+  rooms: 0,
+  monthly_rent: 0,
+  security_deposit: 0,
+  description: "",
+  status: "Available",
+  agent_id: null,
+  ...property,
+});
+
 
   useEffect(() => {
     // ensure owner_id is present for a new property
@@ -47,7 +49,7 @@ export default function OwnerPropertyForm({ property, ownerId, onSuccess, onCanc
   }
 
   return (
-    <form onSubmit={handleSubmit} className="border p-4 rounded bg-white space-y-2">
+    <form onSubmit={handleSubmit} className="border p-4 rounded space-y-2">
       <input name="property_type" placeholder="Type" value={form.property_type} onChange={handleChange} className="border p-2 w-full" required />
       <input name="address" placeholder="Address" value={form.address} onChange={handleChange} className="border p-2 w-full" required />
       <input name="city" placeholder="City" value={form.city} onChange={handleChange} className="border p-2 w-full" required />
