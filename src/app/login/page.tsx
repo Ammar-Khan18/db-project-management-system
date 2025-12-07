@@ -26,9 +26,12 @@ export default function LoginPage() {
         case "Admin":
           router.push("/admin/dashboard");
           break;
+
+        // 🔥 CHANGED THIS:
         case "User":
-          router.push("/user/dashboard");
+          router.push("/browse-properties"); // <--- redirect users to browse properties
           break;
+
         default:
           router.push("/guest/dashboard");
           break;
