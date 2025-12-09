@@ -46,19 +46,81 @@ export default function TenantForm({ tenant, onSuccess, onCancel }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="border p-4 rounded flex flex-col gap-2">
-      <input name="name" placeholder="Name" value={form.name} onChange={handleChange} className="border p-2" required />
-      <input name="cnic" placeholder="CNIC" value={form.cnic} onChange={handleChange} className="border p-2" required />
-      <input name="phone_no" placeholder="Phone" value={form.phone_no} onChange={handleChange} className="border p-2" required />
-      <input name="email" placeholder="Email" value={form.email} onChange={handleChange} className="border p-2" />
-      <input name="occupation" placeholder="Occupation" value={form.occupation} onChange={handleChange} className="border p-2" />
-      <select name="is_active" value={form.is_active} onChange={handleChange} className="border p-2">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white border rounded-lg p-6 flex flex-col gap-4 shadow-md max-w-md text-black"
+    >
+      <h2 className="text-xl font-semibold text-gray-800">
+        {tenant?.id ? "Edit Tenant" : "Add New Tenant"}
+      </h2>
+
+      <input
+        name="name"
+        placeholder="Name"
+        value={form.name}
+        onChange={handleChange}
+        className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required
+      />
+
+      <input
+        name="cnic"
+        placeholder="CNIC"
+        value={form.cnic}
+        onChange={handleChange}
+        className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required
+      />
+
+      <input
+        name="phone_no"
+        placeholder="Phone"
+        value={form.phone_no}
+        onChange={handleChange}
+        className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required
+      />
+
+      <input
+        name="email"
+        placeholder="Email"
+        value={form.email}
+        onChange={handleChange}
+        className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      <input
+        name="occupation"
+        placeholder="Occupation"
+        value={form.occupation}
+        onChange={handleChange}
+        className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      <select
+        name="is_active"
+        value={form.is_active}
+        onChange={handleChange}
+        className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
         <option value="Y">Active</option>
         <option value="N">Inactive</option>
       </select>
-      <div className="flex gap-2 mt-2">
-        <button type="submit" className="bg-green-600 text-white px-2 py-1 rounded">{tenant?.id ? "Update" : "Add"}</button>
-        <button type="button" onClick={onCancel} className="bg-gray-400 text-white px-2 py-1 rounded">Cancel</button>
+
+      <div className="flex gap-3 mt-4">
+        <button
+          type="submit"
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition"
+        >
+          {tenant?.id ? "Update" : "Add"}
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded transition"
+        >
+          Cancel
+        </button>
       </div>
     </form>
   );

@@ -10,7 +10,13 @@ import PropertyForm from "./components/PropertyForm";
 import LeaseForm from "./components/LeaseForm";
 import PaymentForm from "./components/PaymentForm";
 
-type TableName = "Property_Owners" | "Agents" | "Tenants" | "Properties" | "Lease_Agreements" | "Payments";
+type TableName =
+  | "Property_Owners"
+  | "Agents"
+  | "Tenants"
+  | "Properties"
+  | "Lease_Agreements"
+  | "Payments";
 
 export default function AdminDashboard() {
   const [table, setTable] = useState<TableName>("Property_Owners");
@@ -19,8 +25,7 @@ export default function AdminDashboard() {
   const [showForm, setShowForm] = useState(false);
   const router = useRouter();
 
-
-  // Fetch table data
+  // Fetch table data whenever selected table changes
   useEffect(() => {
     fetchData();
   }, [table]);
@@ -36,21 +41,15 @@ export default function AdminDashboard() {
     setShowForm(true);
   }
 
-async function handleDelete(row: any) {
-  if (!confirm("Are you sure you want to delete this?")) return;
+  async function handleDelete(row: any) {
+    if (!confirm("Are you sure you want to delete this?")) return;
 
-  // Convert table name to lowercase and replace underscores
-  const tablePath = table.toLowerCase();
+    await fetch(`/api/admin/${table.toLowerCase()}?id=${row.id}`, {
+      method: "DELETE",
+    });
 
-  // Call DELETE API dynamically
-  await fetch(`/api/admin/${tablePath}?id=${row.id}`, {
-    method: "DELETE",
-  });
-
-  // Refresh table data
-  fetchData();
-}
-
+    fetchData();
+  }
 
   function handleAdd() {
     setEditingRow(null);
@@ -62,69 +61,84 @@ async function handleDelete(row: any) {
     fetchData();
   }
 
-  // Determine columns dynamically
+  // Determine table columns dynamically
   const columns = data.length > 0 ? Object.keys(data[0]) : [];
 
-  // Render the correct form based on the selected table
+  // Render the form dynamically based on the current table
   function renderForm() {
-    const formProps = { row: editingRow, onSuccess: handleFormSuccess, onCancel: () => setShowForm(false) };
+    const commonProps = {
+      onSuccess: handleFormSuccess,
+      onCancel: () => setShowForm(false),
+    };
+
     switch (table) {
       case "Property_Owners":
-        return <OwnerForm owner={editingRow} onSuccess={handleFormSuccess} onCancel={() => setShowForm(false)} />;
+        return <OwnerForm owner={editingRow} {...commonProps} />;
       case "Agents":
-        return <AgentForm agent={editingRow} onSuccess={handleFormSuccess} onCancel={() => setShowForm(false)} />;
+        return <AgentForm agent={editingRow} {...commonProps} />;
       case "Tenants":
-        return <TenantForm tenant={editingRow} onSuccess={handleFormSuccess} onCancel={() => setShowForm(false)} />;
+        return <TenantForm tenant={editingRow} {...commonProps} />;
       case "Properties":
-        return <PropertyForm property={editingRow} onSuccess={handleFormSuccess} onCancel={() => setShowForm(false)} />;
+        return <PropertyForm property={editingRow} {...commonProps} />;
       case "Lease_Agreements":
-      return <LeaseForm lease={editingRow} onSuccess={handleFormSuccess} onCancel={() => setShowForm(false)} />;
-    case "Payments":
-      return <PaymentForm payment={editingRow} onSuccess={handleFormSuccess} onCancel={() => setShowForm(false)} />;
-    default:
-      return null;
+        return <LeaseForm lease={editingRow} {...commonProps} />;
+      case "Payments":
+        return <PaymentForm payment={editingRow} {...commonProps} />;
+      default:
+        return null;
     }
   }
 
+  const tableButtons = [
+    "Property_Owners",
+    "Agents",
+    "Tenants",
+    "Properties",
+    "Lease_Agreements",
+    "Payments",
+  ];
+
   return (
-  <main className="min-h-screen p-6">
-
-    {/* TOP BAR */}
-    <div className="flex justify-between items-center mb-6">
-      <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-
-      {/* LOGOUT BUTTON */}
-      <button
-        onClick={() => router.push("/")}
-        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-      >
-        Logout
-      </button>
-    </div>
-
-    {/* Table selection buttons */}
-    <div className="flex gap-4 mb-4 text-black">
-      {["Property_Owners", "Agents", "Tenants", "Properties", "Lease_Agreements", "Payments"].map((t) => (
+    <main className="min-h-screen p-6 bg-gray-50">
+      {/* Top Bar */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
         <button
-          key={t}
-          className={`px-3 py-1 rounded ${t === table ? "bg-blue-600 text-white" : "bg-gray-200"}`}
-          onClick={() => setTable(t as TableName)}
+          onClick={() => router.push("/")}
+          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
         >
-          {t.replace("_", " ")}
+          Logout
         </button>
-      ))}
-    </div>
+      </div>
 
-    {/* Add button */}
-    <button className="bg-green-600 text-white p-2 rounded mb-4" onClick={handleAdd}>
-      Add New {table.replace("_", " ")}
-    </button>
+      {/* Table Selection */}
+      <div className="flex gap-4 mb-4">
+        {tableButtons.map((t) => (
+          <button
+            key={t}
+            className={`px-3 py-1 rounded font-medium ${
+              t === table ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"
+            }`}
+            onClick={() => setTable(t as TableName)}
+          >
+            {t.replace("_", " ")}
+          </button>
+        ))}
+      </div>
 
-    {/* Show Form */}
-    {showForm && renderForm()}
+      {/* Add New Button */}
+      <button
+        className="bg-green-600 text-white px-4 py-2 rounded mb-4 hover:bg-green-700"
+        onClick={handleAdd}
+      >
+        Add New {table.replace("_", " ")}
+      </button>
 
-    {/* Table */}
-    <TableView columns={columns} data={data} onEdit={handleEdit} onDelete={handleDelete} />
-  </main>
-);
+      {/* Conditional Form */}
+      {showForm && renderForm()}
+
+      {/* Table */}
+      <TableView columns={columns} data={data} onEdit={handleEdit} onDelete={handleDelete} />
+    </main>
+  );
 }

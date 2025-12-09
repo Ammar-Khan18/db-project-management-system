@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 interface TableViewProps {
   columns: string[];
   data: any[];
@@ -11,38 +9,53 @@ interface TableViewProps {
 
 export default function TableView({ columns, data, onEdit, onDelete }: TableViewProps) {
   return (
-    <table className="w-full border-collapse border">
-      <thead>
-        <tr className="text-black">
-          {columns.map((col) => (
-            <th key={col} className="border p-2 bg-gray-200">{col}</th>
-          ))}
-          <th className="border p-2 bg-gray-200">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((row, idx) => (
-          <tr key={idx}>
+    <div className="overflow-x-auto">
+      <table className="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+        <thead className="bg-gray-200 text-black">
+          <tr>
             {columns.map((col) => (
-              <td key={col} className="border p-2">{row[col]}</td>
+              <th
+                key={col}
+                className="px-4 py-2 text-left font-semibold text-black border-b"
+              >
+                {col.replace("_", " ")}
+              </th>
             ))}
-            <td className="border p-2 flex gap-2">
-              <button
-                className="bg-blue-600 text-white px-2 rounded"
-                onClick={() => onEdit(row)}
-              >
-                Edit
-              </button>
-              <button
-                className="bg-red-600 text-white px-2 rounded"
-                onClick={() => onDelete(row)}
-              >
-                Delete
-              </button>
-            </td>
+            <th className="px-4 py-2 text-left font-semibold text-black border-b">Actions</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+
+        <tbody>
+          {data.map((row, idx) => (
+            <tr
+              key={idx}
+              className={`text-black ${
+                idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+              } hover:bg-gray-100 transition`}
+            >
+              {columns.map((col) => (
+                <td key={col} className="px-4 py-2 border-b text-black">
+                  {row[col]}
+                </td>
+              ))}
+              <td className="px-4 py-2 border-b flex gap-2">
+                <button
+                  onClick={() => onEdit(row)}
+                  className="bg-gray-200 text-black px-3 py-1 rounded hover:bg-gray-300 transition"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => onDelete(row)}
+                  className="bg-gray-200 text-black px-3 py-1 rounded hover:bg-gray-300 transition"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
