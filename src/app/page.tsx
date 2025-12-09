@@ -7,7 +7,7 @@ export default function Home() {
 
       {/* MAIN TITLE */}
       <h1 className="text-3xl font-bold text-gray-800 mb-6">
-        Property Management System
+        Property Rental Management System
       </h1>
 
       {/* CARD */}

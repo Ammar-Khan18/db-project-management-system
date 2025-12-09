@@ -13,6 +13,7 @@ type Property = {
   size_sqft?: number;
   description?: string;
   status?: string;
+  image_url?: string;
 };
 
 export default function BrowseProperties() {
@@ -94,8 +95,18 @@ export default function BrowseProperties() {
               key={prop.id}
               className="border rounded-lg shadow-sm bg-white hover:shadow-md transition p-4 flex flex-col justify-between"
             >
-              <div className="h-48 w-full bg-gray-100 rounded mb-4 flex items-center justify-center">
-                <span className="text-gray-400">No Image</span>
+              <div className="h-48 w-full rounded mb-4 overflow-hidden">
+                {prop.image_url ? (
+                  <img
+                    src={prop.image_url}
+                    alt={prop.title || prop.property_type}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="h-full w-full bg-gray-100 flex items-center justify-center">
+                    <span className="text-gray-400">No Image</span>
+                  </div>
+                )}
               </div>
 
               <h2 className="text-xl font-semibold text-gray-800 mb-1">
