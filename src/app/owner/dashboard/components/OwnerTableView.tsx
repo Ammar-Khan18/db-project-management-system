@@ -11,33 +11,36 @@ interface Props {
 
 export default function OwnerTableView({ columns, data, onEdit, onDelete }: Props) {
   return (
-    <div className="overflow-auto border rounded">
+    <div className="overflow-x-auto border rounded-lg shadow-md bg-white">
       <table className="w-full table-auto">
-        <thead className="">
+        <thead className="bg-gray-100">
           <tr>
             {columns.map((c) => (
-              <th key={c} className="text-left p-2 border-b">{c}</th>
+              <th key={c} className="text-left p-3 border-b font-medium text-gray-700">{c}</th>
             ))}
-            <th className="p-2 border-b">Actions</th>
+            <th className="p-3 border-b font-medium text-gray-700">Actions</th>
           </tr>
         </thead>
         <tbody>
           {data.map((row, rowIndex) => (
-            <tr key={row.id ?? rowIndex} className="">
+            <tr
+              key={row.id ?? rowIndex}
+              className="hover:bg-gray-50 transition-colors"
+            >
               {columns.map((c) => (
-                <td key={`${row.id ?? rowIndex}-${c}`} className="p-2 border-b">
+                <td key={`${row.id ?? rowIndex}-${c}`} className="p-3 border-b text-gray-800">
                   {String(row[c])}
                 </td>
               ))}
-              <td className="p-2 border-b flex gap-2">
+              <td className="p-3 border-b flex gap-2">
                 <button
-                  className="bg-blue-600 text-white px-2 py-1 rounded"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded transition"
                   onClick={() => onEdit(row)}
                 >
                   Edit
                 </button>
                 <button
-                  className="bg-red-600 text-white px-2 py-1 rounded"
+                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded transition"
                   onClick={() => onDelete(row)}
                 >
                   Delete
@@ -51,7 +54,7 @@ export default function OwnerTableView({ columns, data, onEdit, onDelete }: Prop
   );
 }
 
-/* TenantForm remains the same */
+/* TenantForm */
 export function TenantForm({ tenant, ownerId, onSuccess, onCancel }: any) {
   const [form, setForm] = React.useState<any>({
     name: "",
@@ -79,15 +82,62 @@ export function TenantForm({ tenant, ownerId, onSuccess, onCancel }: any) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="border p-4 rounded bg-white">
-      <input name="name" placeholder="Name" className="border p-2 w-full mb-2" value={form.name} onChange={handleChange} required />
-      <input name="cnic" placeholder="CNIC" className="border p-2 w-full mb-2" value={form.cnic} onChange={handleChange} required />
-      <input name="phone_no" placeholder="Phone" className="border p-2 w-full mb-2" value={form.phone_no} onChange={handleChange} required />
-      <input name="email" placeholder="Email" className="border p-2 w-full mb-2" value={form.email} onChange={handleChange} />
-      <input name="occupation" placeholder="Occupation" className="border p-2 w-full mb-2" value={form.occupation} onChange={handleChange} />
-      <div className="flex gap-2">
-        <button type="submit" className="bg-green-600 text-white px-3 py-1 rounded">Save</button>
-        <button type="button" onClick={onCancel} className="bg-gray-400 text-white px-3 py-1 rounded">Cancel</button>
+    <form className="border p-6 rounded-lg bg-white shadow-md flex flex-col gap-4" onSubmit={handleSubmit}>
+      <h2 className="text-lg font-semibold text-gray-800">{tenant?.id ? "Edit Tenant" : "Add New Tenant"}</h2>
+      
+      <input
+        name="name"
+        placeholder="Name"
+        value={form.name}
+        onChange={handleChange}
+        className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required
+      />
+      <input
+        name="cnic"
+        placeholder="CNIC"
+        value={form.cnic}
+        onChange={handleChange}
+        className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required
+      />
+      <input
+        name="phone_no"
+        placeholder="Phone"
+        value={form.phone_no}
+        onChange={handleChange}
+        className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+        required
+      />
+      <input
+        name="email"
+        placeholder="Email"
+        value={form.email}
+        onChange={handleChange}
+        className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <input
+        name="occupation"
+        placeholder="Occupation"
+        value={form.occupation}
+        onChange={handleChange}
+        className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      <div className="flex gap-3 mt-2">
+        <button
+          type="submit"
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition"
+        >
+          {tenant?.id ? "Update" : "Add"}
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded transition"
+        >
+          Cancel
+        </button>
       </div>
     </form>
   );
