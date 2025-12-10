@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -141,6 +142,17 @@ export default function RegisterPage() {
           Register
         </button>
 
+        <p className="text-center text-sm text-gray-700 mt-2">
+  Already have an account?{" "}
+  <Link
+    href="/login"
+    className="text-blue-600 font-medium hover:underline"
+  >
+    Click here to login
+  </Link>
+</p>
+
+
         {msg && <p className="text-red-600 text-sm text-center">{msg}</p>}
       </form>
 
@@ -155,10 +167,7 @@ export default function RegisterPage() {
             <strong>Owner:</strong> Can view and manage their own properties and tenants.
           </li>
           <li>
-            <strong>User:</strong> Regular user — limited viewing access.
-          </li>
-          <li>
-            <strong>Guest:</strong> Minimal access, read-only.
+            <strong>User:</strong> Regular user.
           </li>
         </ul>
       </div>

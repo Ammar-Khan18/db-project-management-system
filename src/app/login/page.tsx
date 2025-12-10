@@ -49,6 +49,16 @@ export default function LoginPage() {
         <input type="email" placeholder="Email" className="border p-2 rounded text-black" value={email} onChange={e => setEmail(e.target.value)} required />
         <input type="password" placeholder="Password" className="border p-2 rounded text-black" value={password} onChange={e => setPassword(e.target.value)} required />
         <button type="submit" className="bg-blue-600 text-white p-2 rounded-lg font-medium hover:bg-blue-700 transition">Login</button>
+        <p className="mt-4 text-black text-sm">
+  Don’t have an account?{" "}
+  <span
+    onClick={() => router.push("/register")}
+    className="text-blue-600 font-medium hover:underline"
+  >
+    Create one here
+  </span>
+</p>
+
         {msg && <p className="text-red-600 text-sm text-center">{msg}</p>}
       </form>
     </main>

@@ -22,6 +22,7 @@ export default function OwnerPropertyForm({ property, ownerId, onSuccess, onCanc
     description: "",
     status: "Available",
     agent_id: null,
+    image_url: "", // ⭐ ADDED
     ...property,
   });
 
@@ -37,17 +38,24 @@ export default function OwnerPropertyForm({ property, ownerId, onSuccess, onCanc
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const method = property?.id ? "PUT" : "POST";
+
     await fetch("/api/owner/properties", {
       method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...form, owner_id: ownerId }),
     });
+
     onSuccess();
   }
 
   return (
-    <form onSubmit={handleSubmit} className="border rounded-lg p-6 bg-white shadow-md flex flex-col gap-4 text-black">
-      <h2 className="text-lg font-semibold text-gray-800">{property?.id ? "Edit Property" : "Add New Property"}</h2>
+    <form
+      onSubmit={handleSubmit}
+      className="border rounded-lg p-6 bg-white shadow-md flex flex-col gap-4 text-black"
+    >
+      <h2 className="text-lg font-semibold text-gray-800">
+        {property?.id ? "Edit Property" : "Add New Property"}
+      </h2>
 
       <input
         name="property_type"
@@ -118,6 +126,14 @@ export default function OwnerPropertyForm({ property, ownerId, onSuccess, onCanc
         name="description"
         placeholder="Description"
         value={form.description}
+        onChange={handleChange}
+        className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      <input
+        name="image_url"
+        placeholder="Image URL"
+        value={form.image_url}
         onChange={handleChange}
         className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
