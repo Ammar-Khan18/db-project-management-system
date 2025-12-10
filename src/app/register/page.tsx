@@ -94,7 +94,6 @@ export default function RegisterPage() {
           <option value="Admin" className="text-black">Admin</option>
           <option value="Owner" className="text-black">Owner</option>
           <option value="User" className="text-black">User</option>
-          <option value="Guest" className="text-black">Guest</option>
         </select>
 
         {/* Owner-specific fields */}
